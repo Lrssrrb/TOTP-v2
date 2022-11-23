@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,11 +33,11 @@ public class TotpController {
 		return new ResponseEntity<String>("Please provide valid input", HttpStatus.BAD_REQUEST);
 	}
 	
-	@PostMapping("/valid")
-	public ResponseEntity<String> validate(@RequestBody String OTP) {
+	@PostMapping("/valid/{email}")
+	public ResponseEntity<String> validate(@RequestBody String OTP,@PathVariable String email) {
 		
 		try {
-			String s = totpImpl.valid(OTP);
+			String s = totpImpl.valid(email,OTP);
 			return new ResponseEntity<String>(s, HttpStatus.OK);
 			
 		} catch (InvalidOTP e) {
@@ -71,19 +72,5 @@ public class TotpController {
 		}
 		
 	}
-	
-//	@GetMapping("/getAllUsers")
-//	public ResponseEntity<List<UserDetails>> GetAllUsers() {
-		
-//		try {
-//			List<UserDetails> allUsers = totpImpl.getAllUsers();
-//			Pageable pageable = PageRequest.of(0, 10);
-//			Page<UserDetails> page = new PageImpl<UserDetails>(allUsers,pageable,10);
-//			return new ResponseEntity<List<UserDetails>>(page.getContent(),HttpStatus.OK);
-//		} catch (Exception e) {
-//			throw e;
-//		}
-		
-//	}
 	
 }

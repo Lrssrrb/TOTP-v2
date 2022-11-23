@@ -25,6 +25,7 @@ public class TotpImpl implements Totp{
 
 	private long validtill;
 	private String OTP;
+	private String EMAIL;
 	
 	@Autowired
 	private UserRepo userRepo;
@@ -42,13 +43,14 @@ public class TotpImpl implements Totp{
 	    byte[] bytes = base32.decode(secretKey+random);
 	    String hexKey = Hex.encodeHexString(bytes);
 	    OTP = TOTP.getOTP(hexKey);
+	    EMAIL = secretKey;
 	    return OTP;
 	}
 
 	@Override
-	public String valid(String otp) throws InvalidOTP,OTPexpired {
+	public String valid(String email,String otp) throws InvalidOTP,OTPexpired {
 		
-		String valid = isValid(otp);
+		String valid = isValid(email,otp);
 		
 		if(valid.equals("INV_OTP")) {
 			throw new InvalidOTP("please insert a valid OTP");
@@ -78,9 +80,8 @@ public class TotpImpl implements Totp{
 		return userRepo.findAll();
 	}
 
-	public String isValid(String otp){
-		
-		if(!otp.equals(OTP)) {
+	public String isValid(String email,String otp){
+		if((!otp.equals(OTP)) || (!email.equals(EMAIL))) {
 			return "INV_OTP";
 		}
 		else if(System.currentTimeMillis() > validtill){

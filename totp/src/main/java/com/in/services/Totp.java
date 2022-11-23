@@ -10,6 +10,6 @@ public interface Totp {
 	public UserDetails createUser(UserDetails userDetails);
 	public List<UserDetails> getAllUsers();
 	public String genrateOtp(String secretKey);
-	public String valid(String otp);
+	public String valid(String email,String otp);
 	
 }
